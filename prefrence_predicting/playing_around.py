@@ -1,11 +1,5 @@
 import numpy as np
-import torch
+from value_iteration import value_iteration, follow_policy
 
-var1 = [[1],[2],[3],[4]]
-var2 = [[1],[2],[3],[4]]
-
-var1 = torch.tensor(var1,dtype=torch.float)
-var2 = torch.sub(1,var1)
-
-var = torch.squeeze(torch.stack((var1,var2),axis=2))
-print (var)
+arr = np.array([ -5.2885857, 17.118868,  -32.779552,    5.9108796,  -6.294636,  -11.090468])
+print (arr/arr[0])
