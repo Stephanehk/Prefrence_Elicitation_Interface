@@ -80,6 +80,50 @@ def learn_successor_feature(Q,V,FGAMMA,rew_vec=None):
     #         assert (np.round(v_pred,3) == np.round(V[i][j],3))
     return psi
 
+def learn_successor_feature_iter(pi,FGAMMA,rew_vec=None):
+
+    env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
+    if type(rew_vec) is np.ndarray:
+        env.set_custom_reward_function(rew_vec)
+
+    THETA = 0.001
+    # initialize Q
+    # Q = defaultdict(lambda: np.zeros(env.action_space))
+    psi = [[np.zeros(env.feature_size) for i in range(int(np.sqrt(env.observation_space)))] for j in range (int(np.sqrt(env.observation_space)))]
+    actions = [[-1,0],[1,0],[0,-1],[0,1]]
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    #iterativley learn state value
+    #----------------------------------------------------------------------------------------------------------------------------------------
+    while True:
+        delta = 0
+        # new_psi = psi.copy()
+        new_psi = np.copy(psi)
+
+        for i in range (10):
+            for j in range (10):
+                if env.is_blocked(i,j):
+                    continue
+                # total = 0
+
+                state_psi = []
+                for trans in pi[(i,j)]:
+                    prob, a_index = trans
+                    next_state, reward, done, phi = env.get_next_state((i,j),a_index)
+                    ni,nj = next_state
+                    if not done:
+                        psi_sas = prob*(phi + FGAMMA*psi[ni][nj])
+                    else:
+                        psi_sas = np.zeros(env.feature_size)
+                    state_psi.append(psi_sas)
+                new_psi[i][j] = sum(state_psi)
+                delta = max(delta,np.sum(np.abs(psi[i][j]-new_psi[i][j])))
+                # print (np.sum(np.abs(psi[i][j]-new_psi[i][j])))
+
+        psi = new_psi
+
+        if delta < THETA:
+            break
+    return psi
 
 def build_pi(Q):
     pi = {}
@@ -335,7 +379,7 @@ def get_gt_avg_return(GAMMA):
     V,Q = value_iteration()
     pi = build_pi(Q)
     V_under_gt = iterative_policy_evaluation(pi, GAMMA=GAMMA)
-    gt_avg_return = np.sum(V_under_gt/(len(V_under_gt)*len(V_under_gt[0])))
+    gt_avg_return = np.sum(V_under_gt/92)
     print ("average return following ground truth policy: ")
     print (gt_avg_return)
     print ("=================================================================================\n")

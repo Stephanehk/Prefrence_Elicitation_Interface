@@ -162,10 +162,12 @@ def find_end_state(traj,traj_length=3):
     return traj_ts_x, traj_ts_y,partial_return
 
 
+
 def generate_t_nt_samples(terminating, non_terminating):
     phis = []
     y = []
     rewards = []
+    ses = []
     for i in range (min(len(terminating),len(non_terminating))):
 
         #[gas, goal, sheep, coin, roadblock, mud]
@@ -177,18 +179,20 @@ def generate_t_nt_samples(terminating, non_terminating):
         # print ("\n")
         # assert (non_terminating[i][1] == np.dot(non_terminating[i][0], [-1,50,-50,1,-1,-2]))
 
-        if terminating[i][1] > non_terminating[i][1]:
-            y.append([1,0])
-        elif terminating[i][1] < non_terminating[i][1]:
-            y.append([0,1])
-        elif terminating[i][1] == non_terminating[i][1]:
-            continue
-            y.append([0.5,0.5])
+        # if terminating[i][1] > non_terminating[i][1]:
+        #     y.append([1,0])
+        # elif terminating[i][1] < non_terminating[i][1]:
+        #     y.append([0,1])
+        # elif terminating[i][1] == non_terminating[i][1]:
+        #     continue
+        #     y.append([0.5,0.5])
+        y.append(None)
 
         phis.append([terminating[i][0],non_terminating[i][0]])
         rewards.append([terminating[i][1], non_terminating[i][1]])
+        ses.append([terminating[i][2],non_terminating[i][2]])
 
-    return phis,y,rewards
+    return phis,y,rewards,ses
 
 def truncate_traj_1(traj):
     #truncate traj and get new start state
@@ -198,7 +202,7 @@ def truncate_traj_1(traj):
 
     traj_ts_x,traj_ts_y, pr =find_end_state(traj,traj_length=1)
     phi = find_reward_features(traj,traj_length=1)
-    return pr, phi
+    return pr, phi,[(x,y),(traj_ts_x,traj_ts_y)]
 
 def truncate_traj_2(traj):
     #truncate traj and get new start state
@@ -208,7 +212,7 @@ def truncate_traj_2(traj):
 
     traj_ts_x,traj_ts_y, pr =find_end_state(traj,traj_length=2)
     phi = find_reward_features(traj,traj_length=2)
-    return pr, phi
+    return pr, phi,[(x,y),(traj_ts_x,traj_ts_y)]
 
 
 def get_all_statistics(questions=questions,answers=answers,include_dif_traj_lengths = False):
@@ -231,6 +235,10 @@ def get_all_statistics(questions=questions,answers=answers,include_dif_traj_leng
     pr_r = []
     vf_r = []
     none_r = []
+
+    pr_ses = []
+    vf_ses = []
+    none_ses = []
 
     n_incorrect = 0
     for i in range(len(questions)):
@@ -313,11 +321,11 @@ def get_all_statistics(questions=questions,answers=answers,include_dif_traj_leng
             assert (pr2 - pr1 == y)
 
             #get truncated trajectories
-            os_trunc_traj1_pr,os_trunc_traj1_phi = truncate_traj_1(traj1)
-            os_trunc_traj2_pr,os_trunc_traj2_phi = truncate_traj_1(traj2)
+            os_trunc_traj1_pr,os_trunc_traj1_phi, os_ses1 = truncate_traj_1(traj1)
+            os_trunc_traj2_pr,os_trunc_traj2_phi, os_ses2 = truncate_traj_1(traj2)
 
-            ts_trunc_traj1_pr,ts_trunc_traj1_phi = truncate_traj_2(traj1)
-            ts_trunc_traj2_pr,ts_trunc_traj2_phi = truncate_traj_2(traj2)
+            ts_trunc_traj1_pr,ts_trunc_traj1_phi, ts_ses1 = truncate_traj_2(traj1)
+            ts_trunc_traj2_pr,ts_trunc_traj2_phi, ts_ses2 = truncate_traj_2(traj2)
 
             # if (ts_trunc_traj1_pr != ts_trunc_traj2_pr):
             #     print (ts_trunc_traj1_phi)
@@ -350,112 +358,133 @@ def get_all_statistics(questions=questions,answers=answers,include_dif_traj_leng
             else:
                 # print (a)
                 encoded_a = None
+            traj1_ses = [(traj1[0][0],traj1[0][1]),(traj1_ts_x,traj1_ts_y)]
+            traj2_ses = [(traj2[0][0],traj2[0][1]),(traj2_ts_x,traj2_ts_y)]
 
             if disp_id == "vf":
                 vf_X.append([phi1,phi2])
                 vf_r.append([pr1,pr2])
                 vf_y.append(encoded_a)
+                vf_ses.append([traj1_ses,traj2_ses])
                 if quad == "dsst" or quad == "ssst":
-                    vf_X_terminating.append([phi1,pr1])
-                    vf_X_terminating.append([phi2,pr2])
+                    vf_X_terminating.append([phi1,pr1,traj1_ses])
+                    vf_X_terminating.append([phi2,pr2,traj2_ses])
 
                     if include_dif_traj_lengths:
                         vf_X.append([phi1, os_trunc_traj1_phi])
                         vf_r.append([pr1, os_trunc_traj1_pr])
                         vf_y.append(None)
+                        vf_ses.append([traj1_ses,os_ses1])
+
 
                         vf_X.append([phi1, ts_trunc_traj1_phi])
                         vf_r.append([pr1, ts_trunc_traj1_pr])
                         vf_y.append(None)
+                        vf_ses.append([traj1_ses,ts_ses1])
 
                         vf_X.append([phi2, os_trunc_traj2_phi])
                         vf_r.append([pr2, os_trunc_traj2_pr])
                         vf_y.append(None)
+                        vf_ses.append([traj2_ses,os_ses2])
 
                         vf_X.append([phi2, ts_trunc_traj2_phi])
                         vf_r.append([pr2, ts_trunc_traj2_pr])
                         vf_y.append(None)
+                        vf_ses.append([traj2_ses,ts_ses2])
 
                 elif quad == "dsdt" or quad == "sss":
-                    vf_X_non_terminating.append([phi1,pr1])
-                    vf_X_non_terminating.append([phi2,pr2])
+                    vf_X_non_terminating.append([phi1,pr1,traj1_ses])
+                    vf_X_non_terminating.append([phi2,pr2,traj2_ses])
 
             elif disp_id == "pr":
                 pr_X.append([phi1,phi2])
                 pr_r.append([pr1,pr2])
                 pr_y.append(encoded_a)
+                pr_ses.append([traj1_ses,traj2_ses])
                 if quad == "dsst" or quad == "ssst":
-                    pr_X_terminating.append([phi1,pr1])
-                    pr_X_terminating.append([phi2,pr2])
+                    pr_X_terminating.append([phi1, pr1, traj1_ses])
+                    pr_X_terminating.append([phi2, pr2, traj2_ses])
 
                     if include_dif_traj_lengths:
                         pr_X.append([phi1, os_trunc_traj1_phi])
                         pr_r.append([pr1, os_trunc_traj1_pr])
                         pr_y.append(None)
+                        pr_ses.append([traj1_ses, os_ses1])
 
                         pr_X.append([phi1, ts_trunc_traj1_phi])
                         pr_r.append([pr1, ts_trunc_traj1_pr])
                         pr_y.append(None)
+                        pr_ses.append([traj1_ses, ts_ses1])
 
                         pr_X.append([phi2, os_trunc_traj2_phi])
                         pr_r.append([pr2, os_trunc_traj2_pr])
                         pr_y.append(None)
+                        pr_ses.append([traj2_ses, os_ses2])
 
                         pr_X.append([phi2, ts_trunc_traj2_phi])
                         pr_r.append([pr2, ts_trunc_traj2_pr])
                         pr_y.append(None)
+                        pr_ses.append([traj2_ses, ts_ses2])
 
 
                 elif quad == "dsdt" or quad == "sss":
-                    pr_X_non_terminating.append([phi1,pr1])
-                    pr_X_non_terminating.append([phi2,pr2])
+                    pr_X_non_terminating.append([phi1 ,pr1, traj1_ses])
+                    pr_X_non_terminating.append([phi2, pr2, traj2_ses])
 
             elif disp_id == "none":
                 none_X.append([phi1,phi2])
                 none_r.append([pr1,pr2])
                 none_y.append(encoded_a)
+                none_ses.append([traj1_ses,traj2_ses])
                 if quad == "dsst" or quad == "ssst":
-                    none_X_terminating.append([phi1,pr1])
-                    none_X_terminating.append([phi2,pr2])
+                    none_X_terminating.append([phi1, pr1, traj1_ses])
+                    none_X_terminating.append([phi2, pr2, traj2_ses])
 
                     if include_dif_traj_lengths:
                         none_X.append([phi1, os_trunc_traj1_phi])
                         none_r.append([pr1, os_trunc_traj1_pr])
                         none_y.append(None)
+                        none_ses.append([traj1_ses, os_ses1])
 
                         none_X.append([phi1, ts_trunc_traj1_phi])
                         none_r.append([pr1, ts_trunc_traj1_pr])
                         none_y.append(None)
+                        none_ses.append([traj1_ses, ts_ses1])
 
                         none_X.append([phi2, os_trunc_traj2_phi])
                         none_r.append([pr2, os_trunc_traj2_pr])
                         none_y.append(None)
+                        none_ses.append([traj2_ses, os_ses2])
 
                         none_X.append([phi2, ts_trunc_traj2_phi])
                         none_r.append([pr2, ts_trunc_traj2_pr])
                         none_y.append(None)
+                        none_ses.append([traj2_ses, ts_ses2])
 
                 elif quad == "dsdt" or quad == "sss":
-                    none_X_non_terminating.append([phi1,pr1])
-                    none_X_non_terminating.append([phi2,pr2])
+                    none_X_non_terminating.append([phi1, pr1, traj1_ses])
+                    none_X_non_terminating.append([phi2, pr2, traj2_ses])
 
-    vf_X_add, vf_y_add, vf_add_r = generate_t_nt_samples(vf_X_terminating, vf_X_non_terminating)
-    pr_X_add, pr_y_add, pr_add_r = generate_t_nt_samples(pr_X_terminating, pr_X_non_terminating)
-    none_X_add, none_y_add, none_add_r = generate_t_nt_samples(none_X_terminating, none_X_non_terminating)
+    vf_X_add, vf_y_add, vf_add_r, vf_add_ses = generate_t_nt_samples(vf_X_terminating, vf_X_non_terminating)
+    pr_X_add, pr_y_add, pr_add_r, pr_add_ses = generate_t_nt_samples(pr_X_terminating, pr_X_non_terminating)
+    none_X_add, none_y_add, none_add_r, none_add_ses = generate_t_nt_samples(none_X_terminating, none_X_non_terminating)
 
     # adds syntheitc prefrences between termianting and non-terminating trajectory
     vf_X.extend(vf_X_add)
     vf_r.extend(vf_add_r)
     vf_y.extend(vf_y_add)
+    vf_ses.extend(vf_add_ses)
 
     pr_X.extend(pr_X_add)
     pr_r.extend(pr_add_r)
     pr_y.extend(pr_y_add)
+    pr_ses.extend(pr_add_ses)
 
     none_X.extend(none_X_add)
     none_r.extend(none_add_r)
     none_y.extend(none_y_add)
+    none_ses.extend(none_add_ses)
 
     # print (n_incorrect)
 
-    return vf_X, vf_r, vf_y, pr_X, pr_r, pr_y, none_X, none_r, none_y
+    return vf_X, vf_r, vf_y, vf_ses, pr_X, pr_r, pr_y, pr_ses, none_X, none_r, none_y, none_ses
