@@ -20,8 +20,8 @@ def get_random_reward_vector():
     return np.array(vector)
 
 def generate_random_policy(GAMMA):
-    vec = get_random_reward_vector()
-    # vec = np.array([-1,50,-50,1,-1,-2])
+    # vec = get_random_reward_vector()
+    vec = np.array([-1,50,-50,1,-1,-2])
     V,Qs = value_iteration(rew_vec = vec,GAMMA=GAMMA)
     # follow_policy(Qs, 1000,viz_policy=True)
     pi = build_pi(Qs)
@@ -50,7 +50,7 @@ def calc_value(w, state, succ_feats):
 # v_approx = calc_value([-1,50,-50,1,-1,-2], (0,0), succ_feats)
 # print (v_approx)
 
-# 
+#
 # rew_vect = np.array([ -1.3642614, 14.295705, -17.196255, 0.65846264, -0.12430768, -1.5144913 ])
 # V,Q = value_iteration(rew_vec =rew_vect,GAMMA=0.999)
 #

@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 import math
 import pandas as pd
 import random
+import openpyxl
 
 from grid_world import GridWorldEnv
 from load_training_data import get_all_statistics,find_end_state
@@ -19,20 +20,24 @@ from value_iteration import value_iteration, follow_policy, learn_successor_feat
 from generate_random_policies import generate_all_policies, calc_value
 
 keep_ties = True
-n_prob_samples = 10
-n_prob_iters = 30
+n_prob_samples = 100
+n_prob_iters = 10
 GAMMA=0.999
 include_dif_traj_lengths = True
 # mode = "deterministic_user_data"
-# mode = "user_data"
+mode = "user_data"
 # mode = "sigmoid"
-mode = "deterministic"
+# mode = "deterministic"
 
-prefrence_assum = "er"
+prefrence_assum = "pr"
 if prefrence_assum == "er":
     print("generating policies...")
-    succ_feats, pis = generate_all_policies(100,GAMMA)
+    succ_feats, pis = generate_all_policies(3,GAMMA)
+    np.save("succ_feats.npy",succ_feats)
+    np.save("pis.npy",pis)
     print("finished")
+    # succ_feats = np.load("succ_feats.npy",allow_pickle=True)
+    # pis = np.load("pis.npy",allow_pickle=True)
 
 def augment_data(X,Y,ytype="scalar"):
     aX = []
@@ -83,6 +88,7 @@ def clean_y(X,R,Y):
     out_X = []
 
     synth_formatted_y = []
+    synth_y_dist = []
     synth_out_X = []
     for x,r,y in zip(X,R,Y):
         x = [list(x[0]),list(x[1])]
@@ -117,6 +123,7 @@ def clean_y(X,R,Y):
                     elif num == 0:
                         pref = [0,1]
                     synth_formatted_y.append(np.array(pref))
+                    synth_y_dist.append([r1_prob, r2_prob])
                     synth_out_X.append(x)
             else:
                 synth_formatted_y.append(np.array(get_pref(r,False)))
@@ -124,7 +131,7 @@ def clean_y(X,R,Y):
         else:
             formatted_y.append(np.array(y))
             out_X.append(x)
-    return out_X,formatted_y,synth_out_X,synth_formatted_y
+    return out_X,formatted_y,synth_out_X,synth_formatted_y,synth_y_dist
 
 def format_y(Y,ytype="scalar"):
     formatted_y = []
@@ -229,8 +236,14 @@ def mixed_synth_reward_pred_loss(output, target,x_length):
 
     # print (len(output)/x_length)
     # print (torch.sum(res)/batch_size)
+    #
+    # If the average number of human preference labels per segment pair is X, we could divide the loss from synthetic data by n/X as long as n>=X.
+    # Otherwise, those conditions are somewhat meaningless, since we would be letting the synthetic data completely wash out the human data.
+    h_per_s = x_length/len(output)
 
-    return -torch.mul(torch.sum(res)/batch_size, x_length/len(output))
+    return -torch.divide(torch.sum(res)/batch_size, (h_per_s+10)/h_per_s)
+    # return -torch.sum(res)/batch_size
+
 
 class RewardFunctionPR(torch.nn.Module):
     def __init__(self,n_features=6):
@@ -253,16 +266,18 @@ class RewardFunctionER(torch.nn.Module):
         super(RewardFunctionER, self).__init__()
         self.n_features = n_features
         self.succ_feats = torch.tensor(succ_feats,dtype=torch.double)
+
         # self.w = torch.nn.Parameter(torch.tensor(np.zeros(n_features).T,dtype = torch.float,requires_grad=True))
         self.linear1 = torch.nn.Linear(self.n_features, 1,bias=False).double()
+        self.softmax = torch.nn.Softmax(dim=0)
 
     # def calc_value(self, state):
     #     x,y = state
     #     return torch.max(torch.tensor([torch.squeeze(self.linear1(succ_feats[i][x][y])) for i in range(len(self.succ_feats))]))
-    def get_vals(self,xs,ys):
+    def get_vals(self,d_xs,d_ys):
         v_pi_approx = []
-
-        for x,y in zip(xs,ys):
+        #
+        for x,y in zip(d_xs,d_ys):
             traj_vs = []
             for traj in range (len(x)):
                 ss_vs = []
@@ -273,33 +288,72 @@ class RewardFunctionER(torch.nn.Module):
                     succ_phi = succ_phi.double()
                     v = self.linear1(succ_phi)
                     ss_vs.append(v)
-                traj_vs.append(torch.max(torch.tensor(ss_vs)))
+                # print (torch.tensor(ss_vs).shape)
+                # print (ss_vs)
+                # print ("\n")
+                # assert False
+                # print (self.softmax(torch.tensor(ss_vs)))
+                print (ss_vs)
+                print (self.softmax(torch.tensor(ss_vs)))
+                print ("\n")
+                traj_vs.append(self.softmax(torch.tensor(ss_vs)))
+            # print (traj_vs)
             v_pi_approx.append(torch.tensor(traj_vs))
-        v_pi_approx = torch.stack(v_pi_approx)
-        return v_pi_approx
+
+        # d_xs = d_xs.type(torch.int64)
+        # d_ys = d_ys.type(torch.int64)
+        # for xs,ys in zip(d_xs,d_ys):
+        #     ys = torch.stack([ys[0].repeat(1,6),ys[1].repeat(1,6)])
+        #     ys = torch.unsqueeze(torch.squeeze(ys),2)
+        #     ys = ys.repeat(len(self.succ_feats),1,1,1)
+        #     rows = torch.index_select(self.succ_feats,1,xs)
+        #     feats = torch.gather(rows,2,ys)
+        #     feats = torch.squeeze(feats)
+        #
+        #     print (self.succ_feats[0][8][0])
+        #     print (feats)
+        #
+        #
+        #
+        #     vs = self.linear1(feats)
+        #     v_pred = torch.squeeze(torch.max(vs,dim=0)[0])
+        #     assert False
+
+
+        return torch.stack(v_pi_approx)
 
     def forward(self, phi):
 
         pr = torch.squeeze(self.linear1(phi[:,:,0:6].double()))
         ss_x = torch.squeeze(phi[:,:,6:7])
-        ss_x = torch.squeeze(phi[:,:,7:8])
+        ss_y = torch.squeeze(phi[:,:,7:8])
 
         es_x = torch.squeeze(phi[:,:,8:9])
         es_y = torch.squeeze(phi[:,:,9:10])
 
-        # print (phi[:,:,6:7])
-        #
-        # print (ss_x)
 
-        #build list of succ fears for start states
-        v_ss = self.get_vals(ss_x,ss_x)
-        # v_es = self.get_vals(es_x,es_x)
+        #build list of succ fears for start/end states
+        v_ss = self.get_vals(ss_x,ss_y)
+        v_es = self.get_vals(es_x,es_x)
 
         left_pr = pr[:,0:1]
         right_pr = pr[:,1:2]
 
-        left_pred = torch.sigmoid(torch.subtract(left_pr, right_pr))
-        right_pred = torch.sigmoid(torch.subtract(right_pr, left_pr))
+        left_vf_ss = v_ss[:,0:1]
+        right_vf_ss = v_ss[:,1:2]
+
+        left_vf_es = v_es[:,0:1]
+        right_vf_es = v_es[:,1:2]
+
+        left_delta_v = torch.subtract(left_vf_ss,left_vf_es)
+        right_delta_v = torch.subtract(right_vf_ss,right_vf_es)
+
+        left_delta_er = torch.add(left_pr, left_delta_v)
+        right_delta_er = torch.add(right_pr, right_delta_v)
+
+        left_pred = torch.sigmoid(torch.subtract(left_delta_er, right_delta_er))
+        right_pred = torch.sigmoid(torch.subtract(right_delta_er, left_delta_er))
+
 
         phi_logit = torch.stack([left_pred,right_pred],axis=1)
         return phi_logit
@@ -318,6 +372,16 @@ def get_pref(arr,include_eps = True):
 
 def stringify(arr):
     return [str(a) for a in arr]
+
+
+def save_synth_data_table(X,Y,Y_dist):
+    X_str = stringify(X)
+    Y_str = stringify(Y)
+    Y_dist_str = stringify(Y_dist)
+    df = pd.DataFrame(np.array([X_str, Y_dist_str, Y_str]).T,columns=["[psi_1, psi2]", "prefrence distribution", "sampled prefrence"])
+    return df
+    # df.to_csv("2021_12_11_selected_synthetic_data.csv", sep='\t')
+
 
 def generate_results_table(X,Y,model):
     logits = torch.squeeze(model(X))
@@ -403,7 +467,7 @@ def train(aX, ay, saX = None, say = None, plot_loss=True):
     elif prefrence_assum == "er":
         model = RewardFunctionER(succ_feats)
 
-    optimizer = torch.optim.SGD(model.parameters(), lr=2)#crank up lr
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1)#crank up lr
     losses = []
     train_accuracies = []
     test_accuracies = []
@@ -416,7 +480,7 @@ def train(aX, ay, saX = None, say = None, plot_loss=True):
 
         # Compute Loss
         loss = reward_pred_loss(y_pred, y_train)
-        print (loss)
+        # print (loss)
 
         if type(saX) == np.ndarray and "user" in mode:
             sy_pred = model(sX_train)
@@ -547,7 +611,7 @@ if mode == "deterministic_user_data":
     r_copy = none_r.copy()
     y_copy = none_y.copy()
 
-    X_copy, y_copy, X_copy_sytnh, y_copy_synth = clean_y(X_copy, r_copy,y_copy)
+    X_copy, y_copy, X_copy_sytnh, y_copy_synth,_ = clean_y(X_copy, r_copy,y_copy)
 
 
     # aX, ay = augment_data(pr_X,pr_y,"scalar")
@@ -583,22 +647,37 @@ elif mode == "user_data":
     y_user = vf_y.copy()
 
     # X_copy, y_copy, X_copy_sytnh, y_copy_synth = clean_y(X_copy,r_copy,y_copy)
-
+    dfs = []
     for prob_iter in range(n_prob_iters):
+        print ("==========================Trial " + str(prob_iter)+" ==========================")
+
         # X_copy = none_X.copy()
         # r_copy = none_r.copy()
         # y_copy = none_y.copy()
 
-        X_copy, y_copy, X_copy_sytnh, y_copy_synth = clean_y(X_user,r_user,y_user)
+        X_copy, y_copy, X_copy_sytnh, y_copy_synth,y_dist_copy = clean_y(X_user,r_user,y_user)
 
+        df = save_synth_data_table(X_copy_sytnh,y_copy_synth,y_dist_copy)
+        dfs.append(df)
+        # continue
         print (len(X_copy) + len(X_copy_sytnh))
-        # aX, ay = augment_data(pr_X,pr_y,"scalar")
-        aX, ay = augment_data(X_copy,y_copy,"arr")
-        aX_synth, ay_synth = augment_data(X_copy_sytnh,y_copy_synth,"arr")
 
-        print ("==========================Trial " + str(prob_iter)+" ==========================")
+        # aX, ay = augment_data(X_copy,y_copy,"arr")
+        # aX_synth, ay_synth = augment_data(X_copy_sytnh,y_copy_synth,"arr")
+
+        aX = X_copy
+        ay = y_copy
+
+        # X_copy_sytnh.extend(aX)
+        # y_copy_synth.extend(ay)
+        aX_synth = np.array(X_copy_sytnh)
+        ay_synth = np.array(y_copy_synth)
+
+
+
+
         print ("finding reward vector...")
-        rew_vect,all_losses,train_loss,test_loss,training_acc, testing_acc = train(aX_synth, ay_synth, None, ay_synth, plot_loss=False)
+        rew_vect,all_losses,train_loss,test_loss,training_acc, testing_acc = train(aX, ay, aX_synth, ay_synth, plot_loss=False)
 
 
         all_reward_vecs.append(rew_vect)
@@ -619,6 +698,11 @@ elif mode == "user_data":
         all_avg_returns.append(avg_return)
         print ("============================================================")
 
+    # with pd.ExcelWriter('2021_12_11_selected_synthetic_data,n=100.xlsx') as writer:
+    #     df_iter = 0
+    #     for df in dfs:
+    #         df.head(100).to_excel(writer, sheet_name="Iter_" + str(df_iter) + "_synthetic data")
+    #         df_iter+=1
     print ("\n\n")
     print ("Across all " + str(n_prob_iters) + " trials,")
 

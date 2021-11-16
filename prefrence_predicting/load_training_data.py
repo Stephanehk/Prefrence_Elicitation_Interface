@@ -4,9 +4,9 @@ import re
 import json
 import math
 
-with open('../2021_08_18_woi_questions.data', 'rb') as f:
+with open('../2021_08_collected_data/2021_08_18_woi_questions.data', 'rb') as f:
     questions = pickle.load(f)
-with open('../2021_08_18_woi_answers.data', 'rb') as f:
+with open('../2021_08_collected_data/2021_08_18_woi_answers.data', 'rb') as f:
     answers = pickle.load(f)
 
 dsdt_data = "../saved_data/2021_07_29_dsdt_chosen.json"
