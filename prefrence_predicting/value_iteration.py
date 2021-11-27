@@ -341,8 +341,8 @@ def value_iteration(rew_vec=None, set_rand_rew = False, GAMMA=0.999):
         V = new_V
         if delta < THETA:
             break
-    print (np.round(V,1))
-    print ("=================================================================================\n")
+    # print (np.round(V,1))
+    # print ("=================================================================================\n")
     return V,Qs
 
 

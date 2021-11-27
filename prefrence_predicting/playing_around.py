@@ -1,10 +1,34 @@
 import torch
 import numpy as np
+from value_iteration import value_iteration, follow_policy, learn_successor_feature,get_gt_avg_return,build_pi,iterative_policy_evaluation
 
-arr = torch.tensor([0.7,0.3,0.2])
-m = torch.nn.Softmax(dim=0)
-print (m(arr))
+arr = [ -2.28238783, -20.06451856, -67.45879582,   2.04663161,  -2.18512413,  -4.42418019]
+arr = np.array(arr)
+print (arr/abs(arr[0]))
+
+
+# for i in range(10):
+#     for j in range(10):
+#         gt_v = np.dot(gt_succ_feats[0][i][j],[-1,50,-50,1,-1,-2])
 #
+#         vs = []
+#         for n in range(len(succ_feats)):
+#             v_pred = np.dot(succ_feats[n][i][j],[-1,50,-50,1,-1,-2])
+#             vs.append(v_pred)
+#
+#         vs = torch.tensor(vs)
+#         v_approx = torch.sum(torch.mul(softmax(vs),vs)).detach().numpy()
+#
+#         print (v_approx)
+#         print (gt_v)
+#         print ("\n")
+
+
+
+# [0.44855193 0.55144807]
+# [0.7432258527564061, 0.25677414724359393]
+# [1, 0]
+
 # succ_feats = np.load("succ_feats.npy")
 # succ_feats = torch.tensor(succ_feats)
 # print (succ_feats[0][0][0])
@@ -13,7 +37,7 @@ print (m(arr))
 # class arr:
 #     def __init__(self, arr):
 #         self.arr = arr;
-# # # a = [[[1,2,3],[1,2,3],[1,2,3]], [[1,2,3],[1,2,3],[1,2,3]],[[1,2,3],[1,2,3],[1,2,3]],[[1,2,3],[1,2,3],[1,2,3]]]
+# a = [[[1,2,3],[1,2,3],[1,2,3]], [[1,2,3],[1,2,3],[1,2,3]],[[1,2,3],[1,2,3],[1,2,3]],[[1,2,3],[1,2,3],[1,2,3]]]
 # # # a = [[1,2,3],[4,5,6],[7,8,9]]
 # a = [[[[1,1,1,0,1,1],[2,2,2,2,2,2],[3,3,3,3,3,3]],[[4,4,4,4,4,4],[5,5,0,5,5,5],[6,6,6,6,6,6]],[[7,7,7,0,7,7],[8,8,0,8,8,8],[9,9,9,9,9,9]]], [[[0,1,1,1,1,1],[2,2,2,2,2,2],[3,3,3,3,3,3]],[[1,1,1,0,1,1],[8,8,0,8,8,8],[3,3,3,3,3,3]],[[1,0,1,1,1,1],[2,2,2,2,2,2],[3,3,3,3,3,3]]],[[[1,1,1,1,1,0],[2,2,2,2,2,2],[3,3,3,3,3,3]],[[1,1,1,1,0,1],[8,8,8,8,8,8],[3,3,3,3,3,3]],[[1,1,1,0,1,1],[2,2,2,2,2,2],[3,3,3,3,3,3]]]]
 # # a = [[[1,2,3],[4,5,6],[7,8,9]], [[1,2,3],[1,8,3],[1,2,3]]]
@@ -59,21 +83,21 @@ print (m(arr))
 # ys = torch.tensor ([[[[0],[0],[0],[0],[0],[0]],[[1],[1],[1],[1],[1],[1]]],[[[0],[0],[0],[0],[0],[0]],[[1],[1],[1],[1],[1],[1]]],[[[0],[0],[0],[0],[0],[0]],[[1],[1],[1],[1],[1],[1]]]])
 # ys = torch.tensor ([[[0,0,0,0,0,0],[1,1,1,1,1,1]],[[0,0,0,0,0,0],[1,1,1,1,1,1]],[[0,0,0,0,0,0],[1,1,1,1,1,1]]])
 
-rows = torch.index_select(a,1,xs)
+# rows = torch.index_select(a,1,xs)
+# #
+# # cols = torch.gather(rows,1,ys)
+# # cols = torch.squeeze(cols)
+# cols = torch.index_select(rows,2,ys)
+# print (rows)
+# print ("\n")
+# print (cols)
+# print ("\n")
 #
-# cols = torch.gather(rows,1,ys)
-# cols = torch.squeeze(cols)
-cols = torch.index_select(rows,2,ys)
-print (rows)
-print ("\n")
-print (cols)
-print ("\n")
-
-print (cols.shape)
-cols = torch.index_select(cols,2,helper_ind)
-print (cols)
-# max_ = torch.max(cols,dim=1)[0]
-
+# print (cols.shape)
+# cols = torch.index_select(cols,2,helper_ind)
+# print (cols)
+# # max_ = torch.max(cols,dim=1)[0]
+#
 
 
 
