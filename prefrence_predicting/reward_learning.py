@@ -30,6 +30,8 @@ mode = "sigmoid"
 gt_V,_ = value_iteration(GAMMA=0.999)
 LR = 1
 N_ITERS = 10000
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 # mode = "deterministic"
 
 prefrence_assum = "er"
@@ -588,8 +590,14 @@ def train(aX, ay, saX = None, say = None, loss_coef = None, plot_loss=True):
     X_train = format_X(X_train)
     y_train = format_y(y_train,"arr")
 
+    X_train.to(device)
+    y_train.to(device)
+
     X_test = format_X(X_test)
     y_test = format_y(y_test,"arr")
+
+    X_test.to(device)
+    y_test.to(device)
 
     if type(saX) == np.ndarray and "user" in mode:
         sX_train, sX_test, sy_train, sy_test = train_test_split(saX, say,test_size=.2,random_state= 0,shuffle=True)
@@ -604,6 +612,8 @@ def train(aX, ay, saX = None, say = None, loss_coef = None, plot_loss=True):
         model = RewardFunctionPR()
     elif prefrence_assum == "er":
         model = RewardFunctionER(succ_feats)
+
+    model.to(device)
 
     # testing_acc = model_eval(X_train,y_train,None,model,is_testing=True)
     # assert False
