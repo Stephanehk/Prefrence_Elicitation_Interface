@@ -80,17 +80,21 @@ def learn_successor_feature(Q,V,FGAMMA,rew_vec=None):
     #         assert (np.round(v_pred,3) == np.round(V[i][j],3))
     return psi
 
-def learn_successor_feature_iter(pi,FGAMMA,rew_vec=None):
 
-    env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
+def learn_successor_feature_iter(pi,FGAMMA,rew_vec=None,env=None):
+
+    if env == None:
+        env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
     if type(rew_vec) is np.ndarray:
         env.set_custom_reward_function(rew_vec)
 
     THETA = 0.001
     # initialize Q
     # Q = defaultdict(lambda: np.zeros(env.action_space))
-    psi = [[np.zeros(env.feature_size) for i in range(int(np.sqrt(env.observation_space)))] for j in range (int(np.sqrt(env.observation_space)))]
     actions = [[-1,0],[1,0],[0,-1],[0,1]]
+    psi = [[np.zeros(env.feature_size) for i in range(env.width)] for j in range (env.height)]
+    psi_actions = [[np.zeros(len(actions) * env.width * env.height) for i in range(env.width)] for j in range (env.height)]
+
     #----------------------------------------------------------------------------------------------------------------------------------------
     #iterativley learn state value
     #----------------------------------------------------------------------------------------------------------------------------------------
@@ -99,22 +103,34 @@ def learn_successor_feature_iter(pi,FGAMMA,rew_vec=None):
         # new_psi = psi.copy()
         new_psi = np.copy(psi)
 
-        for i in range (10):
-            for j in range (10):
+        for i in range (env.height):
+            for j in range (env.width):
                 if env.is_blocked(i,j):
                     continue
                 # total = 0
 
                 state_psi = []
+                action_psi = []
                 for trans in pi[(i,j)]:
                     prob, a_index = trans
                     next_state, reward, done, phi = env.get_next_state((i,j),a_index)
+
+                    action_phi = np.zeros((env.height,env.width,len(actions)))
+                    action_phi[i][j][a_index] = 1
+                    action_phi = np.ravel(action_phi)
+
                     ni,nj = next_state
                     if not done:
                         psi_sas = prob*(phi + FGAMMA*psi[ni][nj])
+                        action_feat = prob*(action_phi + FGAMMA*psi_actions[ni][nj])
                     else:
                         psi_sas = np.zeros(env.feature_size)
+                        action_feat = np.zeros(len(actions) * env.width * env.height)
+
                     state_psi.append(psi_sas)
+                    action_psi.append(action_feat)
+
+                psi_actions[i][j] = sum(action_psi)
                 new_psi[i][j] = sum(state_psi)
                 delta = max(delta,np.sum(np.abs(psi[i][j]-new_psi[i][j])))
                 # print (np.sum(np.abs(psi[i][j]-new_psi[i][j])))
@@ -123,21 +139,46 @@ def learn_successor_feature_iter(pi,FGAMMA,rew_vec=None):
 
         if delta < THETA:
             break
-    return psi
+    return psi,np.array(psi_actions)
 
-def build_pi(Q):
+def build_pi(Q,env=None):
     pi = {}
     actions = [[-1,0],[1,0],[0,-1],[0,1]]
-    for i in range (10):
-        for j in range (10):
+
+    if env == None:
+        height = 10
+        width = 10
+    else:
+        height = env.height
+        width = env.width
+
+    for i in range (height):
+        for j in range (width):
             V = max(Q[i][j])
             V_count = Q[i][j].tolist().count(V)
             pi[(i,j)] = [(1/V_count if Q[i][j][a_index] == V else 0, a_index) for a_index in range(len(actions))]
     return pi
 
 
-def iterative_policy_evaluation(pi,rew_vec=None, set_rand_rew = False, GAMMA=0.999):
-    env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
+def build_random_policy(env=None):
+    pi = {}
+    actions = [[-1,0],[1,0],[0,-1],[0,1]]
+
+    if env == None:
+        height = 10
+        width = 10
+    else:
+        height = env.height
+        width = env.width
+
+    for i in range (height):
+        for j in range (width):
+            pi[(i,j)] = [(1/len(actions),a_index) for a_index in range(len(actions))]
+    return pi
+
+def iterative_policy_evaluation(pi,rew_vec=None, set_rand_rew = False, GAMMA=0.999, env=None):
+    if env == None:
+        env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
     # rand_rew_vec = get_random_reward_vector()
     # rand_rew_vec = [-1, -50, 50, 1, -1, -2]
     if  type(rew_vec) is np.ndarray:
@@ -148,22 +189,24 @@ def iterative_policy_evaluation(pi,rew_vec=None, set_rand_rew = False, GAMMA=0.9
 
     THETA = 0.001
     actions = [[-1,0],[1,0],[0,-1],[0,1]]
-    V = np.zeros((int(np.sqrt(env.observation_space)), int(np.sqrt(env.observation_space))))
+    V = np.zeros((env.height, env.width))
 
     #----------------------------------------------------------------------------------------------------------------------------------------
     #iterativley learn state value
     #----------------------------------------------------------------------------------------------------------------------------------------
+    print ("in policy iter:")
     while True:
         delta = 0
         new_V = V.copy()
-        for i in range (10):
-            for j in range (10):
+        for i in range (env.height):
+            for j in range (env.width):
                 if env.is_blocked(i,j):
                     continue
                 # total = 0
                 state_qs = []
                 for trans in pi[(i,j)]:
                     prob, a_index = trans
+
                     next_state, reward, done, _ = env.get_next_state((i,j),a_index)
                     ni,nj = next_state
                     if not done:
@@ -175,7 +218,6 @@ def iterative_policy_evaluation(pi,rew_vec=None, set_rand_rew = False, GAMMA=0.9
 
         V = new_V
         if delta < THETA:
-
             break
 
     return V
@@ -294,9 +336,10 @@ def policy_improvement(rew_vec=None, set_rand_rew = False, GAMMA=0.999):
 
 
 
-def value_iteration(rew_vec=None, set_rand_rew = False, GAMMA=0.999):
+def value_iteration(rew_vec=None, set_rand_rew = False, GAMMA=0.999,env=None):
     # env = GridworldEnv()
-    env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
+    if env == None:
+        env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
     # rand_rew_vec = get_random_reward_vector()
     # rand_rew_vec = [-1, -50, 50, 1, -1, -2]
     if  type(rew_vec) is np.ndarray:
@@ -309,8 +352,8 @@ def value_iteration(rew_vec=None, set_rand_rew = False, GAMMA=0.999):
     THETA = 0.001
     # initialize Q
     # Q = defaultdict(lambda: np.zeros(env.action_space))
-    V = np.zeros((int(np.sqrt(env.observation_space)), int(np.sqrt(env.observation_space))))
-    Qs = [[np.zeros(4) for i in range(int(np.sqrt(env.observation_space)))] for j in range (int(np.sqrt(env.observation_space)))]
+    V = np.zeros((env.height, env.width))
+    Qs = [[np.zeros(4) for i in range(env.width)] for j in range (env.height)]
 
     actions = [[-1,0],[1,0],[0,-1],[0,1]]
     n = 0
@@ -321,14 +364,17 @@ def value_iteration(rew_vec=None, set_rand_rew = False, GAMMA=0.999):
     while True:
         delta = 0
         new_V = V.copy()
-        for i in range (10):
-            for j in range (10):
+        for i in range (env.height):
+            for j in range (env.width):
                 if env.is_blocked(i,j):
                     continue
                 v = V[i][j]
                 state_Qs = []
                 for a_index in range(len(actions)):
                     next_state, reward, done, _ = env.get_next_state((i,j),a_index)
+                    # print ("at state " + str((i,j)) + " taking action " + str(a_index))
+                    # print ("reward: " + str(reward))
+
                     ni,nj = next_state
                     if not done:
                         Q = reward + GAMMA*V[ni][nj]
@@ -338,6 +384,7 @@ def value_iteration(rew_vec=None, set_rand_rew = False, GAMMA=0.999):
 
                 new_V[i][j] = max(Qs[i][j])
                 delta = max(delta,np.abs(v-new_V[i][j]))
+
         V = new_V
         if delta < THETA:
             break
@@ -375,14 +422,19 @@ def ground_truth_follow_policy():
     return avg_return
 
 
-def get_gt_avg_return(GAMMA):
-    V,Q = value_iteration()
-    pi = build_pi(Q)
-    V_under_gt = iterative_policy_evaluation(pi, GAMMA=GAMMA)
-    gt_avg_return = np.sum(V_under_gt/92)
+def get_gt_avg_return(GAMMA,gt_rew_vec=None,env=None):
+    V,Q = value_iteration(rew_vec=gt_rew_vec, env=env,GAMMA=GAMMA)
+    pi = build_pi(Q,env=env)
+    V_under_gt = iterative_policy_evaluation(pi, rew_vec=gt_rew_vec, env=env, GAMMA=GAMMA)
+    if env == None:
+        n_starts = 92
+    else:
+        n_starts = env.n_starts
+    gt_avg_return = np.sum(V_under_gt/n_starts)
     print ("average return following ground truth policy: ")
     print (gt_avg_return)
-    print ("=================================================================================\n")
+    # print ("=================================================================================\n")
+    return gt_avg_return
 
 def follow_policy(Q, max_steps,viz_policy=False):
     env = GridWorldEnv("2021-07-29_sparseboard2-notrap")
@@ -426,50 +478,50 @@ def follow_policy(Q, max_steps,viz_policy=False):
 
         cv2.imshow("path",img)
         cv2.waitKey(0)
-
-    for i in range (10):
-        for j in range (10):
-            if env.is_blocked(i,j) or env.is_terminal(i,j):
-                continue
-            if viz_policy:
-                img = cv2.imread("/Users/stephanehatgiskessell/Desktop/board.png")
-
-            x = i
-            y = j
-            done = False
-            n_steps = 0
-            epsiode_return = 0
-            # print ("\n\n")
-            # print (Q[i][j])
-            while not done and n_steps < max_steps:
-                if viz_policy:
-                    cv2.circle(img,((y*130)+20,(x*130)+20), 12, (255,0,0), -1)
-
-                #a_index = np.argmax(Q[x][y])
-                a_index = np.random.choice(np.flatnonzero(Q[x][y] == Q[x][y].max()))
-
-                next_state, reward, done, _ = env.get_next_state((x,y),a_index)
-                # print ((x,y))
-                # print (Q[x][y])
-                # print (reward)
-                # print ("\n")
-
-                x,y = next_state
-                n_steps +=1
-                epsiode_return+=reward
-            # print(epsiode_return)
-
-            # if viz_policy:
-            #     cv2.imshow("path",img)
-            #     cv2.waitKey(0)
-            epsiode_returns.append(epsiode_return)
-    avg_return = np.mean(epsiode_returns)
-    gt_avg_return = ground_truth_follow_policy()
-
-    print ("average return following learned policy: ")
-    print (avg_return)
-
-    print ("average return following ground truth policy: ")
-    print (gt_avg_return)
-    print ("=================================================================================\n")
-    return avg_return
+    #
+    # for i in range (10):
+    #     for j in range (10):
+    #         if env.is_blocked(i,j) or env.is_terminal(i,j):
+    #             continue
+    #         if viz_policy:
+    #             img = cv2.imread("/Users/stephanehatgiskessell/Desktop/board.png")
+    #
+    #         x = i
+    #         y = j
+    #         done = False
+    #         n_steps = 0
+    #         epsiode_return = 0
+    #         # print ("\n\n")
+    #         # print (Q[i][j])
+    #         while not done and n_steps < max_steps:
+    #             if viz_policy:
+    #                 cv2.circle(img,((y*130)+20,(x*130)+20), 12, (255,0,0), -1)
+    #
+    #             #a_index = np.argmax(Q[x][y])
+    #             a_index = np.random.choice(np.flatnonzero(Q[x][y] == Q[x][y].max()))
+    #
+    #             next_state, reward, done, _ = env.get_next_state((x,y),a_index)
+    #             # print ((x,y))
+    #             # print (Q[x][y])
+    #             # print (reward)
+    #             # print ("\n")
+    #
+    #             x,y = next_state
+    #             n_steps +=1
+    #             epsiode_return+=reward
+    #         # print(epsiode_return)
+    #
+    #         # if viz_policy:
+    #         #     cv2.imshow("path",img)
+    #         #     cv2.waitKey(0)
+    #         epsiode_returns.append(epsiode_return)
+    # avg_return = np.mean(epsiode_returns)
+    # gt_avg_return = ground_truth_follow_policy()
+    #
+    # print ("average return following learned policy: ")
+    # print (avg_return)
+    #
+    # print ("average return following ground truth policy: ")
+    # print (gt_avg_return)
+    # print ("=================================================================================\n")
+    # return avg_return
