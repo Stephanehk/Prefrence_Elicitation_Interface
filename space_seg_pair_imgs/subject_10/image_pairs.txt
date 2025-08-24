@@ -96,5 +96,5 @@ formatted_space_task_unif_samp/(0.0, 0.0)_265_0.png
 formatted_space_task_unif_samp/(0.0, 0.0)_265_1.png
 formatted_space_task_unif_samp/(0.0, 0.0)_179_0.png
 formatted_space_task_unif_samp/(0.0, 0.0)_179_1.png
-formatted_space_task_unif_samp/(0.0, 0.0)_253_1.png
-formatted_space_task_unif_samp/(0.0, 0.0)_253_0.png
+space_special_pair_0.png
+space_special_pair_1.png
