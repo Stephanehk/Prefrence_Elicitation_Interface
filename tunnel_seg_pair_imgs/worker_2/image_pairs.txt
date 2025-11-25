@@ -1,14 +1,14 @@
 boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_2_1.png
 boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_2_0.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_17_1.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_17_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__14_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__14_1.png
 boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_73_0.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_73_1.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_12_0.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_12_1.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_6_1.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_6_0.png
-boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_20_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__39_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__39_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__34_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__34_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__42_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__42_1.png
 boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_20_0.png
 boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_37_0.png
 boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_37_1.png
@@ -45,8 +45,8 @@ boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_820_1.png
 boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_299_0.png
 boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_299_1.png
 boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_437_0.png
-boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_437_1.png
-boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_190_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__51_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__51_1.png
 boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_190_0.png
 boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_32_1.png
 boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_32_0.png
