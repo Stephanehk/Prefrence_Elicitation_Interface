@@ -1,0 +1,100 @@
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__48_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__48_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__45_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__45_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_68_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_68_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__17_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__17_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_52_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_52_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__18_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__18_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_73_0.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_73_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_45_0.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_45_1.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_35_0.png
+boxed_formatted_only_hand_designed_tunnel_images_unif_samp/(0.0, 0.0)_35_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__60_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__60_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_25_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_25_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_555_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_555_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_644_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_644_1.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__53_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__53_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_842_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_842_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__23_0.png
+/Users/stephane/Desktop/legacy_reward_learning_stuff/Regret_Based_Reward_Learning_From_Docs/MTURK_UI/boxed_formatted_tunnel_replacement_screenshots/_0.0__0.0__23_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_439_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_439_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_807_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_807_1.png
+boxed_formatted_only_tunnel_images_unif_samp/(0.0, 0.0)_118_1.png
+boxed_formatted_only_tunnel_images_unif_samp/(0.0, 0.0)_118_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_853_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_853_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_858_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_858_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_251_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_251_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_539_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_539_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_278_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_278_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_709_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_709_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_418_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_418_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_9_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_9_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_706_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_706_1.png
+boxed_formatted_only_tunnel_images_unif_samp/(0.0, 0.0)_34_1.png
+boxed_formatted_only_tunnel_images_unif_samp/(0.0, 0.0)_34_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_415_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_415_1.png
+boxed_formatted_only_tunnel_images_unif_samp/(0.0, 0.0)_0_0.png
+boxed_formatted_only_tunnel_images_unif_samp/(0.0, 0.0)_0_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_183_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_183_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_222_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_222_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_484_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_484_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_796_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_796_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_479_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_479_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_309_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_309_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_88_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_88_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_436_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_436_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_281_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_281_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_311_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_311_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_748_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_748_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_186_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_186_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_571_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_571_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_895_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_895_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_224_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_224_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_471_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_471_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_96_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_96_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_87_1.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_87_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_181_0.png
+boxed_formatted_tunnel_images_unif_samp/(0.0, 0.0)_181_1.png
